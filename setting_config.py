@@ -256,8 +256,8 @@ if __name__ == '__main__':
                 write_mac(MAC_ETH_PATH, mac_eth)
             temp.append(f'\thwaddress ether {mac_eth}')
 
-             temp.append('if-up ifconfig wlan0 down && ip addr flush dev wlan0')
-             temp.append('if-down ip addr flush dev eth0 && rm /var/run/wpa_supplicant/wlan0')
+            temp.append('if-up ifconfig wlan0 down && ip addr flush dev wlan0')
+            temp.append('if-down ip addr flush dev eth0 && rm /var/run/wpa_supplicant/wlan0')
             all['eth'] = temp
             temp = []
         elif args.mode == 'static':
@@ -278,8 +278,8 @@ if __name__ == '__main__':
             if args.dns2:
                 if args.dns2 != "None":
                     temp.append(f'\tdns-nameservers {args.dns2}')
-             temp.append('\tif-up ifconfig wlan0 down && ip addr flush dev wlan0')
-             temp.append('\tif-down ip addr flush dev eth0 && rm /var/run/wpa_supplicant/wlan0')
+            temp.append('\tif-up ifconfig wlan0 down && ip addr flush dev wlan0')
+            temp.append('\tif-down ip addr flush dev eth0 && rm /var/run/wpa_supplicant/wlan0')
 
             all['eth'] = temp
             temp = []
@@ -304,6 +304,7 @@ if __name__ == '__main__':
             temp.append(f'\twpa-psk {args.password}')
             temp.append(f'\twireless-mode managed')
             temp.append(f'\twireless-power off')
+            temp.append('\twpa_conf /var/wpa_supplicant/wpa_supplicant.conf')
 
             all['wlan'] = temp
             temp = []
@@ -330,11 +331,23 @@ if __name__ == '__main__':
                     temp.append(f'\tdns-nameservers {args.dns2}')
             temp.append(f'\twireless-mode managed')
             temp.append(f'\twireless-power off')
-#            temp.append(f'\tpre-up rm -f /var/run/wpa_supplicant/wlan0')
+            temp.append('\twpa_conf /var/wpa_supplicant/wpa_supplicant.conf')
+#            temp.append(f'\tpre-up rm /var/run/wpa_supplicant/wlan0')
 
             all['wlan'] = temp
             temp = []
+            if args.mode in ['static', 'dhcp']:
+                file = open(WPA_PATH, 'w')
+                file.write('country=id\n')
+                file.write('update_config=1\n')
+                file.write('ctrl_interface=/var/run/wpa_supplicant\n')
+                file.write('network={\n')
+                file.write('\tscan_ssid=1\n')
+                file.write(f'\tssid="{args.ssid}"\n')
+                file.write(f'\tpsk="{args.password}"\n')
+                file.write('}')
 
+                file.close()
 
 
     RESULT = NETWORK_PATH
