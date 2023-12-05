@@ -304,7 +304,7 @@ if __name__ == '__main__':
             temp.append(f'\twpa-psk {args.password}')
             temp.append(f'\twireless-mode managed')
             temp.append(f'\twireless-power off')
-            temp.append('\twpa_conf /var/wpa_supplicant/wpa_supplicant.conf')
+            temp.append(f'\twpa_conf {WPA_PATH}')
 
             all['wlan'] = temp
             temp = []
@@ -331,7 +331,7 @@ if __name__ == '__main__':
                     temp.append(f'\tdns-nameservers {args.dns2}')
             temp.append(f'\twireless-mode managed')
             temp.append(f'\twireless-power off')
-            temp.append('\twpa_conf /var/wpa_supplicant/wpa_supplicant.conf')
+            temp.append(f'\twpa_conf {WPA_PATH}')
 #            temp.append(f'\tpre-up rm /var/run/wpa_supplicant/wlan0')
 
             all['wlan'] = temp
